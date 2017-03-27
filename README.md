@@ -32,7 +32,7 @@ class ForumRole
   # traits allow you to categorize abilities shared by multiple roles
   trait :moderation, %i(delete_thread edit_thread)
 
-  role :anonymous, %i(vote_in_polls reply_to_thread)
+  role :anonymous, %i(vote_in_polls reply_to_thread), default: true
 
   # roles can inherit abilities from existing roles, plus add their own
   role :registered, :anonymous, %i(edit_own_thread create_thread)
@@ -52,6 +52,9 @@ ForumRole.new(:registered).can?(:vote_in_polls) # => true
 ForumRole.new("moderator").can?(:edit_thread)   # => true
 ForumRole.new(:anonymous).can?(:create_thread)  # => false
 ForumRole.new(:developer).can?(:introduce_bugs) # => true
+
+# Use the default role
+ForumRole.new.can?(:reply_to_thread) # => true
 ```
 
 If you are using `ActiveRecord` your role class can easily be serialized to any string column.
