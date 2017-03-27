@@ -14,7 +14,8 @@ Gem::Specification.new do |spec|
   spec.homepage      = "https://github.com/carlzulauf/rolistic"
   spec.license       = "MIT"
 
-  spec.files         = `git ls-files -- {lib,LICENSE.txt,README.md}`.split("\n")
+  spec.files         = `git ls-files -- lib/*`.split("\n")
+  spec.files        += %w(README.md LICENSE.txt)
   spec.require_paths = ["lib"]
 
   spec.add_development_dependency "bundler", "~> 1.14"
