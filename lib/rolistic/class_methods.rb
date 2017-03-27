@@ -33,7 +33,7 @@ module Rolistic
     end
 
     def abilities_for_trait(trait)
-      traits_map.fetch(trait) { [] }
+      traits_map.fetch(trait) { abilities_for(name) }
     end
 
     def trait(trait, abilities)
