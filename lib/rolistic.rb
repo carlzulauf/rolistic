@@ -1,19 +1,21 @@
 require "rolistic/version"
 
 require "active_support/concern"
-require "active_support/core_ext/module/delegation"
 
 module Rolistic
   extend ActiveSupport::Concern
 
   included do
     attr_reader :name, :abilities
-    delegate :to_s, to: :name
   end
 
   def initialize(name = self.class.default)
     @name = name.to_sym if name
     @abilities = self.class.abilities_for(@name)
+  end
+
+  def to_s
+    name.to_s
   end
 
   def can?(ability)
