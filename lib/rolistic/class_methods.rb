@@ -25,7 +25,7 @@ module Rolistic
 
     def traits_map
       return @traits_map if defined?(@traits_map)
-      @traits_map = {everything: Everything}
+      @traits_map = {}
     end
 
     def abilities_for(name)
@@ -44,6 +44,7 @@ module Rolistic
     def role(name, *traits_and_abilities, **options)
       abilities = traits_and_abilities.reduce([]) do |m, t_or_a|
         case t_or_a
+        when :everything then Everything
         when Symbol then m + abilities_for_trait(t_or_a)
         when Array then m + t_or_a
         else t_or_a
