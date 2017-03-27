@@ -28,6 +28,6 @@ module Rolistic
   end
 
   def inspect
-    to_s
+    "#<#{self.class} :#{to_s}>"
   end
 end
