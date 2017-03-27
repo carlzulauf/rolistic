@@ -25,7 +25,7 @@ module Rolistic
 
     def traits_map
       return @traits_map if defined?(@traits_map)
-      @traits_map = {}
+      @traits_map = {everything: Everything}
     end
 
     def abilities_for(name)
