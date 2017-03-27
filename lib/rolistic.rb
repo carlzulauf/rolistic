@@ -66,11 +66,12 @@ module Rolistic
       traits_map.fetch(trait) { [] }
     end
 
-    def add_trait(trait, abilities)
+    def trait(trait, abilities)
       traits_map[trait] = abilities
     end
+    alias_method :add_trait, :trait
 
-    def add_role(name, *traits_and_abilities, **options)
+    def role(name, *traits_and_abilities, **options)
       abilities = traits_and_abilities.reduce([]) do |m, t_or_a|
         case t_or_a
         when Symbol then m + abilities_for_trait(t_or_a)
@@ -81,6 +82,7 @@ module Rolistic
       abilities_map[name] = abilities
       @default = name if options[:default]
     end
+    alias_method :add_role, :role
 
     def default
       @default if defined?(@default)

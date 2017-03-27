@@ -1,21 +1,21 @@
 class TestRole
   include Rolistic
 
-  add_trait :basic_user, %i(manage_account have_fun)
+  trait :basic_user, %i(manage_account have_fun)
 
-  add_role :n00b, %i(register), default: true
-  add_role :admin, Rolistic::Everything
-  add_role :member, :basic_user
-  add_role :premium_member, :basic_user, %i(access_premium_services)
-  add_role :api_client, %i(access_api)
-  add_role :banned, []
+  role :n00b, %i(register), default: true
+  role :admin, Rolistic::Everything
+  role :member, :basic_user
+  role :premium_member, :basic_user, %i(access_premium_services)
+  role :api_client, %i(access_api)
+  role :banned, []
 end
 
 class TestRoleWithoutDefault
   include Rolistic
 
-  add_role :customer, %i(eat)
-  add_role :cook,     %i(cook)
+  role :customer, %i(eat)
+  role :cook,     %i(cook)
 end
 
 describe Rolistic do
