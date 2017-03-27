@@ -1,12 +1,11 @@
 require "rolistic/version"
 
-require "active_support/concern"
-
 module Rolistic
-  extend ActiveSupport::Concern
-
-  included do
-    attr_reader :name, :abilities
+  def self.included(klass)
+    klass.class_exec do
+      attr_reader :name, :abilities
+      extend ClassMethods
+    end
   end
 
   def initialize(name = self.class.default)
@@ -30,7 +29,7 @@ module Rolistic
     to_s
   end
 
-  class_methods do
+  module ClassMethods
     def load(raw)
       case raw
       when self then raw
