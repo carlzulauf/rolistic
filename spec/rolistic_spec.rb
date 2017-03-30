@@ -6,7 +6,7 @@ class TestRole
   role :n00b, %i(register), default: true
   role :admin, :everything
   role :member, :basic_user
-  role :premium_member, :basic_user, %i(access_premium_services)
+  role :premium_member, :member, %i(access_premium_services)
   role :api_client, %i(access_api)
   role :banned, []
 end
