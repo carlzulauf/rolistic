@@ -21,6 +21,7 @@ module Rolistic
   end
 
   def can?(ability)
+    ability = ability.to_sym if ability.is_a?(String)
     abilities.member?(ability)
   end
 
