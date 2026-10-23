@@ -1,5 +1,7 @@
 module Rolistic
   module ClassMethods
+    NO_ABILITIES = Set.new.freeze
+
     def load(raw)
       case raw
       when self then raw
@@ -29,7 +31,7 @@ module Rolistic
     end
 
     def abilities_for(name)
-      find_role(name) || []
+      find_role(name) || NO_ABILITIES
     end
 
     def abilities_for_trait(trait)
@@ -51,7 +53,7 @@ module Rolistic
     end
 
     def trait(trait, abilities)
-      traits_map[trait] = abilities
+      traits_map[trait] = Set.new(abilities).freeze
     end
     alias_method :add_trait, :trait
 
@@ -60,7 +62,7 @@ module Rolistic
         raise DefinitionError, "role #{name.inspect} has access to everything " \
           "and cannot be combined with other traits or abilities"
       end
-      abilities = traits_and_abilities.reduce([]) do |m, t_or_a|
+      abilities = traits_and_abilities.reduce(Set.new) do |m, t_or_a|
         case t_or_a
         when :everything then Everything
         when Symbol
@@ -70,12 +72,12 @@ module Rolistic
               "#{t_or_a.inspect}, which has access to everything; " \
               "use :everything instead"
           end
-          m + trait_abilities
-        when Array then m + t_or_a
+          m | trait_abilities
+        when Array then m | t_or_a
         else m
         end
       end
-      abilities_map[name] = abilities == Everything ? Everything : abilities.dup.freeze
+      abilities_map[name] = abilities == Everything ? Everything : abilities.freeze
       @default = name if options[:default]
     end
     alias_method :add_role, :role

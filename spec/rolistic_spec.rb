@@ -64,6 +64,12 @@ describe Rolistic do
       expect(admin.can?("anything")).to be(true)
     end
 
+    it "compiles abilities to frozen sets" do
+      expect(premium_member.abilities).to be_a(Set).and be_frozen
+      expect(premium_member.abilities).to eq(Set[:manage_account, :have_fun, :access_premium_services])
+      expect(TestRole.new(:unknown).abilities).to be_a(Set).and be_frozen
+    end
+
     it "does not allow abilities to be modified through an instance" do
       expect { member.abilities << :access_api }.to raise_error(FrozenError)
       expect(TestRole.new(:member).can?(:access_api)).to be(false)
@@ -152,6 +158,17 @@ describe Rolistic do
       role = klass.new(:writer)
       expect(role.can?(:read)).to be(true)
       expect(role.can?(:write)).to be(true)
+    end
+
+    it "is not affected by changes to arrays after they are used to define traits" do
+      abilities = %i(read)
+      klass = define_roles do
+        trait :reader, abilities
+        role :writer, :reader, %i(write)
+      end
+      abilities << :delete
+      expect(klass.traits_map[:reader]).to eq(Set[:read])
+      expect(klass.new(:writer).can?(:delete)).to be(false)
     end
 
     it "does not allow referencing unknown traits or roles" do
