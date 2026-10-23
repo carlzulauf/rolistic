@@ -29,11 +29,24 @@ module Rolistic
     end
 
     def abilities_for(name)
-      abilities_map.fetch(name) { [] }
+      find_role(name) || []
     end
 
     def abilities_for_trait(trait)
-      traits_map.fetch(trait) { abilities_for(trait) }
+      find_trait(trait) || abilities_for(trait)
+    end
+
+    # roles and traits defined on a parent role class are visible to subclasses
+    def find_role(name)
+      abilities_map.fetch(name) { parent_role_class&.find_role(name) }
+    end
+
+    def find_trait(trait)
+      traits_map.fetch(trait) { parent_role_class&.find_trait(trait) }
+    end
+
+    def parent_role_class
+      superclass if superclass < Rolistic
     end
 
     def trait(trait, abilities)
@@ -67,11 +80,12 @@ module Rolistic
     alias_method :add_role, :role
 
     def default
-      @default if defined?(@default)
+      defined?(@default) ? @default : parent_role_class&.default
     end
 
     def available
-      abilities_map.keys
+      inherited = parent_role_class ? parent_role_class.available : []
+      inherited | abilities_map.keys
     end
   end
 end

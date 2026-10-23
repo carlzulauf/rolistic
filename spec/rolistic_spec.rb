@@ -92,6 +92,44 @@ describe Rolistic do
     end
   end
 
+  context "subclass of TestRole" do
+    let(:subclass) do
+      Class.new(TestRole) do
+        role :moderator, :member, %i(moderate)
+        role :api_client, %i(access_api access_admin_api)
+      end
+    end
+
+    it "inherits roles and the default role" do
+      expect(subclass.new(:premium_member).can?(:access_premium_services)).to be(true)
+      expect(subclass.new(:admin).can?(:anything)).to be(true)
+      expect(subclass.new).to be_default
+      expect(subclass.new.can?(:register)).to be(true)
+    end
+
+    it "can define roles using inherited traits and roles" do
+      moderator = subclass.new(:moderator)
+      expect(moderator.can?(:have_fun)).to be(true)
+      expect(moderator.can?(:moderate)).to be(true)
+    end
+
+    it "can override inherited roles without affecting the parent" do
+      expect(subclass.new(:api_client).can?(:access_admin_api)).to be(true)
+      expect(TestRole.new(:api_client).can?(:access_admin_api)).to be(false)
+    end
+
+    it "can set its own default role without affecting the parent" do
+      subclass.role :guest, %i(browse), default: true
+      expect(subclass.new.name).to eq(:guest)
+      expect(TestRole.new.name).to eq(:n00b)
+    end
+
+    it "lists inherited and new roles as available" do
+      expect(subclass.available).to eq(TestRole.available + [:moderator])
+      expect(TestRole.available).not_to include(:moderator)
+    end
+  end
+
   context "role definitions" do
     def define_roles(&block)
       Class.new do
