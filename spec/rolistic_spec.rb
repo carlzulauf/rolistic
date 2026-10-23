@@ -18,7 +18,7 @@ class TestRoleWithoutDefault
   role :cook,     %i(cook)
 end
 
-describe Rolistic do
+RSpec.describe Rolistic do
   context "TestRole implementation" do
     let(:n00b) { TestRole.new }
     %i(admin member premium_member api_client banned).each do |name|
@@ -209,14 +209,9 @@ describe Rolistic do
 
   context "TestRoleWithoutDefault implementation" do
     describe "new" do
-      it "does not error when given nil" do
-        TestRoleWithoutDefault.new
-        TestRoleWithoutDefault.new(nil)
-      end
-
       it "treats nil role as default" do
-        role = TestRoleWithoutDefault.new
-        expect(role).to be_default
+        expect(TestRoleWithoutDefault.new).to be_default
+        expect(TestRoleWithoutDefault.new(nil)).to be_default
       end
 
       it "works with non-default roles still" do
