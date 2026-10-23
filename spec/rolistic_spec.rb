@@ -57,6 +57,34 @@ describe Rolistic do
       expect(banned.can?(:manage_account)).to be(false)
       expect(banned.can?(:reticulate_splines)).to be(false)
     end
+
+    describe "load" do
+      it "loads a role from a string" do
+        role = TestRole.load("member")
+        expect(role).to be_a(TestRole)
+        expect(role.name).to eq(:member)
+        expect(role.can?(:manage_account)).to be(true)
+      end
+
+      it "loads a role from a symbol" do
+        expect(TestRole.load(:admin).name).to eq(:admin)
+      end
+
+      it "returns an existing role unchanged" do
+        role = TestRole.new(:member)
+        expect(TestRole.load(role)).to be(role)
+      end
+
+      it "loads the default role from nil" do
+        expect(TestRole.load(nil)).to be_default
+      end
+
+      it "returns nil for blank strings" do
+        expect(TestRole.load("")).to be_nil
+        expect(TestRole.load("  \t\n")).to be_nil
+        expect(TestRole.load(:"")).to be_nil
+      end
+    end
   end
 
   context "TestRoleWithoutDefault implementation" do

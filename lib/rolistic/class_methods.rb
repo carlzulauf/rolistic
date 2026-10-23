@@ -4,7 +4,7 @@ module Rolistic
       case raw
       when self then raw
       when String, Symbol
-        new(raw) unless raw.blank?
+        new(raw) unless raw.to_s.match?(/\A[[:space:]]*\z/)
       else
         new
       end
