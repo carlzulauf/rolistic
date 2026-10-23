@@ -79,10 +79,10 @@ describe Rolistic do
         expect(TestRole.load(nil)).to be_default
       end
 
-      it "returns nil for blank strings" do
-        expect(TestRole.load("")).to be_nil
-        expect(TestRole.load("  \t\n")).to be_nil
-        expect(TestRole.load(:"")).to be_nil
+      it "loads the default role from blank strings" do
+        expect(TestRole.load("")).to be_default
+        expect(TestRole.load("  \t\n")).to be_default
+        expect(TestRole.load(:"")).to be_default
       end
     end
   end
@@ -105,6 +105,17 @@ describe Rolistic do
         expect(role.can?(:eat)).to be(true)
         expect(role.can?(:cook)).to be(false)
         expect(role.can?(:random_thing)).to be(false)
+      end
+    end
+
+    describe "load" do
+      it "loads a nil role from nil or blank strings" do
+        [nil, "", " "].each do |raw|
+          role = TestRoleWithoutDefault.load(raw)
+          expect(role).to be_default
+          expect(role.name).to be_nil
+          expect(role.can?(:eat)).to be(false)
+        end
       end
     end
   end
