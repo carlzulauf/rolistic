@@ -58,6 +58,11 @@ describe Rolistic do
       expect(banned.can?(:reticulate_splines)).to be(false)
     end
 
+    it "does not allow abilities to be modified through an instance" do
+      expect { member.abilities << :access_api }.to raise_error(FrozenError)
+      expect(TestRole.new(:member).can?(:access_api)).to be(false)
+    end
+
     describe "load" do
       it "loads a role from a string" do
         role = TestRole.load("member")

@@ -61,7 +61,7 @@ module Rolistic
         else m
         end
       end
-      abilities_map[name] = abilities
+      abilities_map[name] = abilities == Everything ? Everything : abilities.dup.freeze
       @default = name if options[:default]
     end
     alias_method :add_role, :role
