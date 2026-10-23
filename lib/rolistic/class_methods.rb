@@ -33,7 +33,8 @@ module Rolistic
     end
 
     def abilities_for_trait(trait)
-      find_trait(trait) || abilities_for(trait)
+      find_trait(trait) || find_role(trait) ||
+        raise(DefinitionError, "no trait or role named #{trait.inspect} has been defined")
     end
 
     # roles and traits defined on a parent role class are visible to subclasses

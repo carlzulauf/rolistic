@@ -148,6 +148,24 @@ describe Rolistic do
       expect(role.can?(:write)).to be(true)
     end
 
+    it "does not allow referencing unknown traits or roles" do
+      expect {
+        define_roles do
+          trait :reader, %i(read)
+          role :writer, :raeder, %i(write)
+        end
+      }.to raise_error(Rolistic::DefinitionError, /no trait or role named :raeder/)
+    end
+
+    it "does not allow referencing roles before they are defined" do
+      expect {
+        define_roles do
+          role :editor, :writer, %i(edit)
+          role :writer, %i(write)
+        end
+      }.to raise_error(Rolistic::DefinitionError, /no trait or role named :writer/)
+    end
+
     it "does not allow inheriting from an everything role" do
       expect {
         define_roles do
