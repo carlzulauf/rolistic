@@ -32,7 +32,7 @@ describe Rolistic do
 
     it "acts like a admin role" do
       expect(admin).not_to be_default
-      expect(admin.can?(:access_api))
+      expect(admin.can?(:access_api)).to be(true)
       expect(admin.can?(:do_anything)).to be(true)
     end
 
