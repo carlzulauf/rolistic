@@ -1,7 +1,4 @@
-# coding: utf-8
-lib = File.expand_path('../lib', __FILE__)
-$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'rolistic/version'
+require_relative "lib/rolistic/version"
 
 Gem::Specification.new do |spec|
   spec.name          = "rolistic"
@@ -13,9 +10,15 @@ Gem::Specification.new do |spec|
   spec.description   = %q{Simple DSL to define roles and associated permissions.}
   spec.homepage      = "https://github.com/carlzulauf/rolistic"
   spec.license       = "MIT"
+  spec.required_ruby_version = ">= 3.3"
 
-  spec.files         = `git ls-files -- lib/*`.split("\n")
-  spec.files        += %w(README.md LICENSE.txt)
+  spec.metadata = {
+    "source_code_uri"       => spec.homepage,
+    "bug_tracker_uri"       => "#{spec.homepage}/issues",
+    "rubygems_mfa_required" => "true",
+  }
+
+  spec.files         = Dir["lib/**/*.rb"] + %w(README.md LICENSE.txt)
   spec.require_paths = ["lib"]
 
   spec.add_development_dependency "rake", "~> 13.0"
