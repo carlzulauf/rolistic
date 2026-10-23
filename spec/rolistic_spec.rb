@@ -113,6 +113,14 @@ describe Rolistic do
         end
       }.to raise_error(Rolistic::DefinitionError, /cannot inherit from :admin/)
     end
+
+    it "does not allow combining everything with other abilities" do
+      [[:everything, %i(read)], [%i(read), :everything]].each do |args|
+        expect {
+          define_roles { role :admin, *args }
+        }.to raise_error(Rolistic::DefinitionError, /cannot be combined/)
+      end
+    end
   end
 
   context "TestRoleWithoutDefault implementation" do

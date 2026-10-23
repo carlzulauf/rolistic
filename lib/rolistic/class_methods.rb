@@ -42,6 +42,10 @@ module Rolistic
     alias_method :add_trait, :trait
 
     def role(name, *traits_and_abilities, **options)
+      if traits_and_abilities.include?(:everything) && traits_and_abilities.size > 1
+        raise DefinitionError, "role #{name.inspect} has access to everything " \
+          "and cannot be combined with other traits or abilities"
+      end
       abilities = traits_and_abilities.reduce([]) do |m, t_or_a|
         case t_or_a
         when :everything then Everything
