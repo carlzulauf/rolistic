@@ -47,7 +47,7 @@ module Rolistic
         when :everything then Everything
         when Symbol then m + abilities_for_trait(t_or_a)
         when Array then m + t_or_a
-        else t_or_a
+        else m
         end
       end
       abilities_map[name] = abilities

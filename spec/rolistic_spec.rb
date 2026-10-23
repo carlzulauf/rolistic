@@ -87,6 +87,25 @@ describe Rolistic do
     end
   end
 
+  context "role definitions" do
+    def define_roles(&block)
+      Class.new do
+        include Rolistic
+        class_exec(&block)
+      end
+    end
+
+    it "ignores unsupported arguments without discarding earlier abilities" do
+      klass = define_roles do
+        trait :reader, %i(read)
+        role :writer, :reader, %i(write), "unsupported"
+      end
+      role = klass.new(:writer)
+      expect(role.can?(:read)).to be(true)
+      expect(role.can?(:write)).to be(true)
+    end
+  end
+
   context "TestRoleWithoutDefault implementation" do
     describe "new" do
       it "does not error when given nil" do
