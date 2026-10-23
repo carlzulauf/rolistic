@@ -1,4 +1,5 @@
 require "rolistic/version"
+require "rolistic/errors"
 require "rolistic/class_methods"
 require "rolistic/everything"
 

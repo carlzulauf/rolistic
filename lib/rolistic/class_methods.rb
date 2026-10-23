@@ -45,7 +45,14 @@ module Rolistic
       abilities = traits_and_abilities.reduce([]) do |m, t_or_a|
         case t_or_a
         when :everything then Everything
-        when Symbol then m + abilities_for_trait(t_or_a)
+        when Symbol
+          trait_abilities = abilities_for_trait(t_or_a)
+          if trait_abilities == Everything
+            raise DefinitionError, "role #{name.inspect} cannot inherit from " \
+              "#{t_or_a.inspect}, which has access to everything; " \
+              "use :everything instead"
+          end
+          m + trait_abilities
         when Array then m + t_or_a
         else m
         end

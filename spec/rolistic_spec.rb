@@ -104,6 +104,15 @@ describe Rolistic do
       expect(role.can?(:read)).to be(true)
       expect(role.can?(:write)).to be(true)
     end
+
+    it "does not allow inheriting from an everything role" do
+      expect {
+        define_roles do
+          role :admin, :everything
+          role :super_admin, :admin
+        end
+      }.to raise_error(Rolistic::DefinitionError, /cannot inherit from :admin/)
+    end
   end
 
   context "TestRoleWithoutDefault implementation" do
