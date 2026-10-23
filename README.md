@@ -2,7 +2,7 @@
 
 A simple DSL for role-based permissions.
 
-Inspired by tools like [`cancan`](https://github.com/ryanb/cancan) and [`pundit`](https://github.com/elabs/pundit) but intended to be even simpler.
+Inspired by tools like [`cancancan`](https://github.com/CanCanCommunity/cancancan) and [`pundit`](https://github.com/varvet/pundit) but intended to be even simpler.
 
 All permissions are identified by a single ability name. No need for objects or methods to manage policies for every type of domain object. Have a complex edge case? Just create a new ability for it specifically.
 
@@ -61,11 +61,17 @@ If you are using `ActiveRecord` your role class can easily be serialized to any 
 
 ```ruby
 class User < ApplicationRecord
-  serialize :role, ForumRole
+  serialize :role, coder: ForumRole
   delegate :can?, to: :role
 end
 
 User.new(role: "registered").can?(:create_thread) # => true
+```
+
+Rails 7.0 and earlier take the role class as a positional argument instead. Rails 7.1 deprecated this form and Rails 7.2 removed it.
+
+```ruby
+serialize :role, ForumRole
 ```
 
 More usage examples can be found in `spec/rolistic_spec.rb`.
