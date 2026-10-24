@@ -41,7 +41,10 @@ module Rolistic
     [self.class, name].hash
   end
 
+  # name.inspect quotes names that need it and shows a missing name as nil.
+  # roles without a definition have no abilities, so they are marked as such.
   def inspect
-    "#<#{self.class} :#{to_s}>"
+    undefined = " (undefined)" unless self.class.find_role(name)
+    "#<#{self.class} #{name.inspect}#{undefined}>"
   end
 end

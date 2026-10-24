@@ -105,6 +105,32 @@ RSpec.describe Rolistic do
       end
     end
 
+    describe "inspect" do
+      it "shows the class and role name" do
+        expect(member.inspect).to eq("#<TestRole :member>")
+        expect(n00b.inspect).to eq("#<TestRole :n00b>")
+        expect(banned.inspect).to eq("#<TestRole :banned>")
+        expect(admin.inspect).to eq("#<TestRole :admin>")
+      end
+
+      it "quotes names that are not plain symbols" do
+        expect(TestRole.new("super admin").inspect).to eq(%(#<TestRole :"super admin" (undefined)>))
+      end
+
+      it "marks roles that are not defined" do
+        expect(TestRole.new(:bogus).inspect).to eq("#<TestRole :bogus (undefined)>")
+      end
+
+      it "shows a missing name as nil" do
+        expect(TestRoleWithoutDefault.new.inspect).to eq("#<TestRoleWithoutDefault nil (undefined)>")
+      end
+
+      it "treats roles defined on a parent class as defined" do
+        stub_const("SubRole", Class.new(TestRole))
+        expect(SubRole.new(:member).inspect).to eq("#<SubRole :member>")
+      end
+    end
+
     describe "load" do
       it "loads a role from a string" do
         role = TestRole.load("member")
