@@ -29,6 +29,18 @@ module Rolistic
     name == self.class.default
   end
 
+  # roles are value objects: abilities are derived from the class and name, so
+  # two roles of the same class and name are equal. This lets ActiveRecord see
+  # assigning an equivalent role as no change.
+  def ==(other)
+    other.class == self.class && other.name == name
+  end
+  alias_method :eql?, :==
+
+  def hash
+    [self.class, name].hash
+  end
+
   def inspect
     "#<#{self.class} :#{to_s}>"
   end

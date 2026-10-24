@@ -75,6 +75,36 @@ RSpec.describe Rolistic do
       expect(TestRole.new(:member).can?(:access_api)).to be(false)
     end
 
+    describe "equality" do
+      it "considers roles of the same class and name equal" do
+        expect(TestRole.new(:member)).to eq(TestRole.new(:member))
+        expect(TestRole.new(:member)).to eql(TestRole.new(:member))
+        expect(TestRole.load("member")).to eq(TestRole.new(:member))
+        expect(TestRole.new).to eq(TestRole.new(:n00b))
+      end
+
+      it "considers roles with different names unequal" do
+        expect(member).not_to eq(admin)
+        expect(member).not_to eq(premium_member)
+      end
+
+      it "considers roles of different classes unequal" do
+        expect(TestRole.new(:member)).not_to eq(Class.new(TestRole).new(:member))
+        expect(TestRoleWithoutDefault.new).not_to eq(TestRole.new(nil))
+      end
+
+      it "does not consider a role equal to its name" do
+        expect(member).not_to eq(:member)
+        expect(member).not_to eq("member")
+      end
+
+      it "can be used as a hash key" do
+        expect(TestRole.new(:member).hash).to eq(TestRole.new(:member).hash)
+        expect({ TestRole.new(:member) => true }).to have_key(TestRole.new(:member))
+        expect([member, TestRole.new(:member), admin].uniq).to eq([member, admin])
+      end
+    end
+
     describe "load" do
       it "loads a role from a string" do
         role = TestRole.load("member")
